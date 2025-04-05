@@ -51,6 +51,48 @@ export const signup = async (req, res) => {
   }
 };
 
-export const login = (req, res) => {
-  res.send("login");
+
+//we are going to get the  email and password from the req and use it 
+//if we have  a email in user with that same email
+//we'll generate jwt token and send it 
+//other wise show invalid credentials
+export const login = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(400).json({ message: "invalid credentials" });
+      }
+
+      const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+      if (!isPasswordCorrect) {
+        return res.status(400).json({ message: "invalid credentials" });
+      }
+
+      generateToken(user._id, res);
+
+      res.status(200).json({
+        _id: user._id,
+        fullName: user.fullName,
+        email: user.email,
+        profilePic: user.profilePic,
+      });
+    } catch (eror) {
+      console.log("Error in login controller", error.message);
+      return res.status(500).json({ message: "internal server error" });
+    }
 };
+
+//find the cookie
+//if you get the cookie just clear it and make the time of that to 0
+//and send the response of logout 
+export const logout = (req, res) => {
+  try{
+    res.cookie("jwt","",{maxAge:0});
+    res.status(200).json({message:"logged out successfully"})
+  }catch(error){
+    console.log("Error in logout controller",error.message);
+    return res.status(500).json({message:"internal server error"})
+  }
+}
