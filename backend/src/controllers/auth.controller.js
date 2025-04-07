@@ -96,3 +96,39 @@ export const logout = (req, res) => {
     return res.status(500).json({message:"internal server error"})
   }
 }
+
+
+export const updateProfile = async (req,res)=>{//takes the req, res and next to where we check if the user is logged in by the cookie in a middleware , this middleware is associated in the router
+    try{
+       const {profilePic} = req.body
+       const user = req.user._id
+  
+       if(!profilePic){
+        return res.status(400).json({message:"please provide the profile pic"})
+       }
+
+       const uploadResponse = await cloudinary.uploader.upload(profilePic  )
+
+       const updatedUser = await user.findbyIdAndUpdate(user,{
+        profilepic : uploadResponse.secure_url
+       },{
+          new: true
+       })
+
+       res.status(200).json(updatedUser)
+
+    }catch(error){
+      console.log("error in update profile:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+
+export const checkAuth = (req,res)=>{
+    try{
+      res.status(200).json(req.user)
+    }catch(error){
+      console.log("Error in checkAuth controller", error.message);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+}
