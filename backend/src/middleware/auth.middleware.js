@@ -1,5 +1,5 @@
-import jwt from "jsonwebtoken";
-import { User } from "../models/user.model";
+import jwt from "jsonwebtoken"
+import { User } from "../models/user.model.js";
 //get the jwt token from the cookie generated
 // if !token send unauthorized
 //when you get the token check it with jwt verify to generate the decoded token 
@@ -15,12 +15,12 @@ export const protectRoute = async (req,res , next) =>{
             return res.status(401).json({message : "unauthorized"})
         }
 
-        const decode = jwt.verify(token , process.env.JWT_SECRET_KEY)
+        const decode = jwt.verify(token , process.env.JWT_SECRET)
         if(!decode){
             return res.status(401).json({message : "invalid token"})
         }
         
-        const user = await User.findOne(decode.userId).select("-password")// we put a - before the password to not get the password in the response
+        const user = await User.findById(decode.userId).select("-password")// we put a - before the password to not get the password in the response
 
         if(!user){
             return res.status(401).json({message : "user not found"})

@@ -1,4 +1,4 @@
-import  {User}  from "../models/user.model.js";
+import {User } from "../models/user.model.js"
 import bcrypt from "bcryptjs"; //importing bcryptjs for hashing the password
 import{generateToken} from "../lib/util.js" //importing the generate token function from utils folder
 
