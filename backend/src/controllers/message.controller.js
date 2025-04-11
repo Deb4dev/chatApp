@@ -1,6 +1,6 @@
 import { User } from "../models/user.model.js"
 import { Message } from "../models/message.model.js"
-import {cloudinary} from "../lib/cloudinary.js"
+import cloudinary from "../lib/cloudinary.js"
 
 //finds all the users in  the contacts except himself and shows them on the sidebar
 export const getUsers = async (req, res) => {
@@ -48,6 +48,8 @@ export const sendMessage = async(req,res)=>{
         if(image){
 
             const uploadResponse = await cloudinary.uploader.upload(image)
+
+            imageUrl = uploadResponse.secure_url
         }
 
 
@@ -65,3 +67,13 @@ export const sendMessage = async(req,res)=>{
 
     }
 }
+
+
+// export const getChatUsers = async(req, res)=>{
+//     try{
+//         const  myId = req.user._id 
+        
+//     }catch(error){
+
+//     }
+// } make it work to get the users on the sidebar whom user messaged only

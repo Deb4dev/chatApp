@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import { connectDB } from './lib/db.js'
 import {router as authRouter} from './routes/auth.route.js'
-import {router as messageRouter} from './routes/message.route.js'
+import  messageRouter from './routes/message.route.js'
 
 dotenv.config()
 
