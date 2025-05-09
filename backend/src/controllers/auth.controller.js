@@ -1,7 +1,7 @@
 import {User } from "../models/user.model.js"
 import bcrypt from "bcryptjs"; //importing bcryptjs for hashing the password
 import{generateToken} from "../lib/util.js" //importing the generate token function from utils folder
-
+import cloudinary from "../lib/cloudinary.js"
 export const signup = async (req, res) => {
   const { email, fullName, password } = req.body;
   //console.log("BODY:", req.body);
@@ -101,19 +101,19 @@ export const logout = (req, res) => {
 export const updateProfile = async (req,res)=>{//takes the req, res and next to where we check if the user is logged in by the cookie in a middleware , this middleware is associated in the router
     try{
        const {profilePic} = req.body
-       const user = req.user._id
+       const userId = req.user._id
   
        if(!profilePic){
         return res.status(400).json({message:"please provide the profile pic"})
        }
 
-       const uploadResponse = await cloudinary.uploader.upload(profilePic  )
+       const uploadResponse = await cloudinary.uploader.upload(profilePic)
 
-       const updatedUser = await user.findbyIdAndUpdate(user,{
-        profilepic : uploadResponse.secure_url
-       },{
-          new: true
-       })
+       const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { profilePic: uploadResponse.secure_url },
+        { new: true }
+      );
 
        res.status(200).json(updatedUser)
 

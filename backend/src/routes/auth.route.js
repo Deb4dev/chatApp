@@ -3,7 +3,7 @@ import { signup,login,logout , updateProfile ,checkAuth } from '../controllers/a
 import { protectRoute } from '../middleware/auth.middleware.js';
 //create the router for the auth routes
 
-export const router = express.Router();
+const router = express.Router();
 
 router.post('/signup',signup);
 router.post('/login',login);
@@ -12,3 +12,5 @@ router.post('/logout',logout);
 router.put('/update-profile' ,protectRoute, updateProfile)
 //check if the user is logged in by protectRoute middleware and then calls to the controllers 
 router.get('/check',protectRoute , checkAuth)
+
+export default router;
