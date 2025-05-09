@@ -7,16 +7,19 @@ import {LoginPage} from './pages/LoginPage.jsx'
 import {SettingsPage} from './pages/SettingsPage.jsx'
 import {ProfilePage} from './pages/ProfilePage.jsx'
 import {NavBar} from './components/NavBar.jsx'
+import {useThemeStore} from './store/useThemeStore.js'
 import {Loader} from 'lucide-react'
 import {useEffect} from 'react'
 function App() {
-    const {authUser , checkAuth , isCheckingAuth} = useAuthStore();
-    useEffect(()=>{checkAuth()},[checkAuth])
-    console.log(authUser)
-
+    const {authUser , checkAuth , isCheckingAuth , onlineUsers} = useAuthStore();
+    
+    console.log({onlineUsers})
+    const {theme} = useThemeStore();
     useEffect(()=>{
       checkAuth();
     },[checkAuth])
+
+    console.log({authUser})
 
     if(isCheckingAuth &&  !authUser){
       return (
@@ -26,7 +29,7 @@ function App() {
       )
     }
   return (
-    <>
+    <div data-theme = {theme}>
       <NavBar/>
       <Routes>
         <Route path = '/' element = {authUser?<HomePage/>:<Navigate to='/login'  />}/> 
@@ -36,7 +39,7 @@ function App() {
         <Route path = '/settings' element = {<SettingsPage/>}/>
         <Route path = '/Profile' element = {authUser?<ProfilePage/>:<Navigate to='/login'  />}/>   
       </Routes>
-    </>
+    </div>
   )
 }
 
